@@ -1,5 +1,5 @@
 ---
-name: flutter_first_app
+name: first_app
 description: Follows parts 1 and 2 of the "Write Your First Flutter App" series on Google's codelabs.
 
 publish_to: 'none'  # Remove this line if you wish to publish to pub.dev
