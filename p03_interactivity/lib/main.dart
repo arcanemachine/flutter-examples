@@ -7,21 +7,70 @@ void main() {
   runApp(const MyApp());
 }
 
+class FavoriteWidget extends StatefulWidget {
+  const FavoriteWidget({Key? key}) : super(key: key);
+
+  @override
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
+}
+
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool _isFavorited = true;
+  int _favoriteCount = 41;
+
+  void _toggleFavorite() {
+    setState(() {
+      if (_isFavorited) {
+        _favoriteCount -= 1;
+        _isFavorited = false;
+      } else {
+        _favoriteCount += 1;
+        _isFavorited = true;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(0),
+          child: IconButton(
+            padding: const EdgeInsets.all(0),
+            alignment: Alignment.centerRight,
+            icon: (_isFavorited
+              ? const Icon(Icons.star)
+              : const Icon(Icons.star_border)),
+            color: Colors.red[500],
+            onPressed: _toggleFavorite,
+          ),
+        ),
+        SizedBox(
+          width: 18,
+          child: SizedBox(
+            child: Text('$_favoriteCount'),
+          ),
+        )
+      ],
+    );
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  @override
+ @override
   Widget build(BuildContext context) {
     Widget titleSection = Container(
       padding: const EdgeInsets.all(32),
       child: Row(
         children: [
           Expanded(
-            /*1*/
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /*2*/
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: const Text(
@@ -40,22 +89,39 @@ class MyApp extends StatelessWidget {
               ],
             ),
           ),
-          /*3*/
-          Icon(
-            Icons.star,
-            color: Colors.red[500],
-          ),
-          const Text('41'),
+          const FavoriteWidget(),
         ],
       ),
     );
 
-    Color color = Theme.of(context).primaryColor;
+
+   Color color = Theme.of(context).primaryColor;
+
+    Column _buildButtonColumn(Color color, IconData icon, String label) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color),
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                color: color,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
 
     Widget buttonSection = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildButtonColumn(color, Icons.call, 'CALL'),
+        _buildbuttoncolumn(color, icons.call, 'call'),
         _buildButtonColumn(color, Icons.near_me, 'ROUTE'),
         _buildButtonColumn(color, Icons.share, 'SHARE'),
       ],
@@ -74,11 +140,13 @@ class MyApp extends StatelessWidget {
       ),
     );
 
+    const appTitle = "Flutter Layout Demo!";
+
     return MaterialApp(
-      title: 'Flutter layout demo',
+      title: appTitle,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Flutter layout demo'),
+          title: const Text(appTitle),
         ),
         body: ListView(
           children: [
@@ -94,27 +162,6 @@ class MyApp extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Column _buildButtonColumn(Color color, IconData icon, String label) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color),
-        Container(
-          margin: const EdgeInsets.only(top: 8),
-          child: Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: color,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
