@@ -1,4 +1,4 @@
-name: default_app
+name: p05_weather_app
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -29,6 +29,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  sqflite:
+  path:
+  sqlite3_flutter_libs:  # ios/android
+  sqflite_common_ffi:  # windows/linux
 
 
   # The following adds the Cupertino Icons font to your application.
