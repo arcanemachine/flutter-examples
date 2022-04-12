@@ -36,7 +36,7 @@ Future main() async {
     version: 1,
   );
 
-  // method: insert into db
+  // create entry
   Future<void> insertCity(City city) async {
     final db = await database;
 
@@ -47,9 +47,8 @@ Future main() async {
     );
   }
 
-
-  // method: read from db
-  Future<List<City>> cities() async {
+  // read all
+  Future<List<City>> cityGetAll() async {
     final db = await database;
 
     // query the table for all cities
@@ -63,16 +62,11 @@ Future main() async {
     ));
   }
 
-  // example: create and read city
-  var edmonton = const City(
-    id: 0,
-    name: "Edmonton",
-    cityId: 'abc',
-  );
-  await insertCity(edmonton);
-  if (kDebugMode) print(await cities());
+  Future<City> cityGet(id) async {
+    final List<City> cities = await cityGetAll();
+  }
 
-  // method: update the db
+  // update
   Future<void> updateCity(City city) async {
     final db = await database;
 
@@ -84,17 +78,7 @@ Future main() async {
     );
   }
 
-  // example: update city
-  var edmonton2 = const City(
-    id: 0,
-    name: "Edmonton",
-    cityId: 'def',
-  );
-  updateCity(edmonton2);
-
-  if (kDebugMode) print(await cities());
-
-  // method: delete city
+  // delete
   Future<void> deleteCity(int id) async {
     final db = await database;
 
@@ -104,9 +88,4 @@ Future main() async {
       whereArgs: [id],
     );
   }
-
-  // example: delete city
-  deleteCity(edmonton.id);
-  if (kDebugMode) print(await cities());
-
 }
