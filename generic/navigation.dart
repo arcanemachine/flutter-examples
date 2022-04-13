@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => SecondRoute(),
+                    builder: (context) => const SecondRoute(),
                 ),
               );
             },
@@ -110,6 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class SecondRoute extends StatelessWidget {
+  const SecondRoute({Key? key}) : super(key: key);
+
   @override
   Widget build (BuildContext context) {
     return Scaffold(

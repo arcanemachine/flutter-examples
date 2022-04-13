@@ -90,7 +90,6 @@ Future main() async {
     cityId: 'def',
   );
   updateCity(edmonton2);
-
   if (kDebugMode) print(await cities());
 
   // method: delete city
