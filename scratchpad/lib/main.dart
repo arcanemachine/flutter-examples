@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-const _appTitle = "Navigation Menu Demo";
+// app
+const _appTitle = "Fetch Demo";
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -11,12 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: _appTitle,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: _appTitle),
+      home: MyHomePage(title: _appTitle),
     );
   }
 }
@@ -31,44 +33,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget _drawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              "Drawer Header",
-              style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.white
-              ),
-            ),
-          ),
-          ListTile(
-            title: const Text("Home"),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text("Second Route"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SecondRoute(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+  late Future<Album> futureAlbum;
+
+  @override
+  void initState() {
+    super.initState();
+
+    futureAlbum = fetchAlbum();
   }
 
   @override
@@ -77,46 +48,20 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      drawer: _drawer(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Hello World!'),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
-        child: IconTheme(
-          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                IconButton(
-                  tooltip: "Open navigation menu",
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+        child: FutureBuilder<Album>(
+          future: futureAlbum,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Text(snapshot.data!.title);
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
 
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build (BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Second Route")),
-      body: const Center(
-        child: Text("Second Route")
-      ),
+            return const CircularProgressIndicator();
+          }
+        ),
+      )
     );
   }
 }
