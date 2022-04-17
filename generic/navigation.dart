@@ -1,74 +1,80 @@
 import 'package:flutter/material.dart';
-
-const _appTitle = "Navigation Menu Demo";
+import 'package:go_router/go_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: _appTitle,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+  Widget build(BuildContext context) => MaterialApp.router(
+    routeInformationParser: _router.routeInformationParser,
+    routerDelegate: _router.routerDelegate,
+    title: 'GoRouter Example',
+  );
+
+  final GoRouter _router = GoRouter(
+    routes: <GoRoute>[
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) =>
+          const IntroScreen(),
       ),
-      home: const MyHomePage(title: _appTitle),
-    );
-  }
+      GoRoute(
+        path: '/counter',
+        builder: (BuildContext context, GoRouterState state) =>
+          const CounterScreen(title: 'Counter'),
+      ),
+    ],
+  );
+
+  // return MaterialApp(
+  //   title: 'Flutter Demo',
+  //   theme: ThemeData(
+  //     primarySwatch: Colors.blue,
+  //   ),
+  //   home: const MyHomePage(title: 'Flutter Demo Home Page'),
+  // );
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class IntroScreen extends StatelessWidget {
+  const IntroScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: const Text("Intro View")),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(
+            child: const Text("Show the Counter"),
+            onPressed: () => context.go('/counter'),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class CounterScreen extends StatefulWidget {
+  const CounterScreen({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<CounterScreen> createState() => _CounterScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  Widget _drawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              "Drawer Header",
-              style: TextStyle(
-                fontSize: 24.0,
-                color: Colors.white
-              ),
-            ),
-          ),
-          ListTile(
-            title: const Text("Home"),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text("Second Route"),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const SecondRoute(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+class _CounterScreenState extends State<CounterScreen> {
+  int _counter = 0;
+
+  void _incrementCounter() {
+    setState(() {
+      _counter++;
+    });
   }
 
   @override
@@ -77,47 +83,36 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      drawer: _drawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('Hello World!'),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.blue,
-        child: IconTheme(
-          data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            const Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            const SizedBox(
+              height: 16.0,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                IconButton(
-                  tooltip: "Open navigation menu",
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {},
+                ElevatedButton(
+                  child: const Text("Return to the intro page"),
+                  onPressed: () => context.go('/'),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-class SecondRoute extends StatelessWidget {
-  const SecondRoute({Key? key}) : super(key: key);
-
-  @override
-  Widget build (BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Second Route")),
-      body: const Center(
-        child: Text("Second Route")
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }
