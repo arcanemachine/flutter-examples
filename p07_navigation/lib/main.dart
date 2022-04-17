@@ -51,7 +51,7 @@ class IntroScreen extends StatelessWidget {
         children: <Widget>[
           ElevatedButton(
             child: const Text("Show the Counter"),
-            onPressed: () => context.go('/counter'),
+            onPressed: () => context.push('/counter'),
           ),
         ],
       ),
@@ -81,6 +81,10 @@ class _CounterScreenState extends State<CounterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
         title: Text(widget.title),
       ),
       body: Center(
