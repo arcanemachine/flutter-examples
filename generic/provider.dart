@@ -11,39 +11,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MyViewModel(),
+      create: (_) => AppState(),
       child: MaterialApp(
-        title: 'Flutter Demo: Provider',
+        title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const MyHomePage(title: 'Provider Demo'),
+        home: const MyHomePage(),
       ),
     );
   }
 }
 
-class MyViewModel extends ChangeNotifier {
-  int _counter = 0;
-
-  int get counter => _counter;
+class AppState extends ChangeNotifier {
+  int counter = 0;
 
   void incrementCounter() {
-    _counter++;
+    counter++;
     notifyListeners();
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String? title;
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // final _state = Provider.of<AppState>(context);
+    final _state = context.watch<AppState>();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(title!),
+        title: const Text("Counter App"),
       ),
       body: Center(
         child: Column(
@@ -52,17 +51,15 @@ class MyHomePage extends StatelessWidget {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Consumer<MyViewModel>(builder: (context, viewModel, child) {
-              return Text(
-                '${viewModel.counter}',
-                style: Theme.of(context).textTheme.headline4,
-              );
-            }),
+            Text(
+              '${_state.counter}',
+              style: Theme.of(context).textTheme.headline4,
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () { Provider.of<MyViewModel>(context, listen: false).incrementCounter(); },
+        onPressed: _state.incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
